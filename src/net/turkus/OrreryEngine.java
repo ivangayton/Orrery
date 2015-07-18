@@ -1,28 +1,27 @@
 package net.turkus;
 
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.awt.*;
 import java.awt.event.*;
 
+import com.jogamp.opengl.awt.GLCanvas;
 import java.nio.DoubleBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
-
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
+
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.Component;
 
 public class OrreryEngine implements GLEventListener{
     //Timer-related fields
@@ -105,7 +104,7 @@ public class OrreryEngine implements GLEventListener{
     public void display(GLAutoDrawable drawable) {
     	currTime = System.currentTimeMillis();
         stopTime = currTime+interval-12;
-        reactToUserInput();
+        //reactToUserInput();
         while(stopTime>currTime){
             euler();
             if(camIsAffectedByGravity)camEuler();
@@ -716,4 +715,6 @@ public class OrreryEngine implements GLEventListener{
         animator.start();
 
 	}
+
+	
 }

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="gluegen-java-src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/gluegen-java-src.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

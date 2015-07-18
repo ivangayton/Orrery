@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="jar1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-test-android.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-all-mobile.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-all-android.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-test.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-all-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-all-noawt.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

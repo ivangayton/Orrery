@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="dist">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/jinput/dist/jinput.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jinput/dist/jinput-test.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

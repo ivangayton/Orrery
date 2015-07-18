@@ -1,0 +1,53 @@
+<component name="libraryTable">
+  <library name="atomic">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-os-x11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-osx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-util-graph.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-event.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-glmobile.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-swt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-x11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-os-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-util-awt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-gldesktop-dbg.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-os-osx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-cg-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-android.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-intelgdl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-cg.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-bcm-old.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-omx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-glmobile-dbg.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/nativewindow-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/gluegen-gl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/nativewindow-awt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/nativewindow-os-win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-glu.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-os-android.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-awt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-gldesktop.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/nativewindow-os-x11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-bcm-vc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/nativewindow-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-ogl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/nativewindow-os-osx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-sdk.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-kd.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-awt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-swt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-driver-linux.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-util-gldesktop.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-glu-gldesktop.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/jogl-util-fixedfuncemu.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jogl-2.0-b877-20121227-linux-amd64/jar/atomic/newt-core.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

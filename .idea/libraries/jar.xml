@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jar/gluegen.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jar/gluegen-rt-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jar/gluegen-rt-android.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jar/gluegen-rt.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
