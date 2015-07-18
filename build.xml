@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Orrery with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="/Users/sardo/Documents/workspace/Orrery/Build/Orrery.jar">
+            <manifest>
+                <attribute name="Main-Class" value="net.turkus.OrreryEngine"/>
+                <attribute name="Class-Path" value=". Orrery_lib/gluegen-rt-natives-macosx-universal.jar Orrery_lib/gluegen-rt.jar Orrery_lib/gluegen.jar Orrery_lib/joal-natives-macosx-universal.jar Orrery_lib/joal-test.jar Orrery_lib/joal.jar Orrery_lib/jocl-natives-macosx-universal.jar Orrery_lib/jocl.jar Orrery_lib/jogl-all-natives-macosx-universal.jar Orrery_lib/jogl.all-mobile.jar Orrery_lib/jogl.all-noawt.jar Orrery_lib/jogl.all.jar Orrery_lib/jogl.test.jar Orrery_lib/jinput.jar"/>
+            </manifest>
+            <fileset dir="/Users/sardo/Documents/workspace/Orrery/bin"/>
+        </jar>
+        <delete dir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <mkdir dir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/gluegen-rt-natives-macosx-universal.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/gluegen-rt.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/gluegen.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/joal-natives-macosx-universal.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/joal-test.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/joal.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jocl-natives-macosx-universal.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jocl.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jogl-all-natives-macosx-universal.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jogl.all-mobile.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jogl.all-noawt.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jogl.all.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jogamp-macosx-universal/jar/jogl.test.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+        <copy file="/Users/sardo/Documents/workspace/libs/jinput/jinput.jar" todir="/Users/sardo/Documents/workspace/OrreryWithDisplayLists/Build/Orrery_lib"/>
+    </target>
+</project>

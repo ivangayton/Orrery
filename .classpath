@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/sardo/Documents/workspace/libs/jinput"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/ivan/workspace/Orrery/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jar/gluegen.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/ivan/workspace/Orrery/libs/Gluegen/gluegen%20Javadoc/javadoc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/ivan/workspace/Orrery/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jnlp-files"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/ivan/workspace/Orrery/libs/jinput/dist/jinput.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/ivan/workspace/Orrery/libs/jinput/dist"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/ivan/workspace/Orrery/libs/jogl-2.0-b877-20121227-linux-amd64/jar/jogl-all.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/ivan/workspace/Orrery/libs/jogl-2.0-b877-20121227-linux-amd64/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/ivan/workspace/Orrery/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/jar/gluegen-rt-natives-linux-amd64.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/ivan/workspace/Orrery/libs/Gluegen/gluegen%20Javadoc/javadoc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/ivan/workspace/Orrery/libs/Gluegen/gluegen-2.0-b616-20121227-linux-amd64/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
