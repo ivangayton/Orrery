@@ -1,0 +1,94 @@
+Delivered-To: ivangayton@gmail.com
+Received: by 10.25.22.69 with SMTP id m66csp570895lfi;
+        Sun, 19 Jul 2015 04:35:17 -0700 (PDT)
+X-Received: by 10.68.209.136 with SMTP id mm8mr38429614pbc.64.1437305285874;
+        Sun, 19 Jul 2015 04:28:05 -0700 (PDT)
+Return-Path: <horizons@ssd.jpl.nasa.gov>
+Received: from ssd.jpl.nasa.gov (ssd.jpl.nasa.gov. [128.149.23.134])
+        by mx.google.com with ESMTPS id gv11si28321938pbd.79.2015.07.19.04.28.05
+        for <ivangayton@gmail.com>
+        (version=TLSv1 cipher=RC4-SHA bits=128/128);
+        Sun, 19 Jul 2015 04:28:05 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) client-ip=128.149.23.134;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) smtp.mail=horizons@ssd.jpl.nasa.gov
+Received: from ssd.jpl.nasa.gov (localhost.localdomain [127.0.0.1])
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8) with ESMTP id t6JBS4kE027846
+	for <ivangayton@gmail.com>; Sun, 19 Jul 2015 04:28:04 -0700
+Received: (from horizons@localhost)
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8/Submit) id t6JBS4vJ027845
+	for ivangayton@gmail.com; Sun, 19 Jul 2015 04:28:04 -0700
+Date: Sun, 19 Jul 2015 04:28:04 -0700
+From: Horizons Ephemeris System <horizons@ssd.jpl.nasa.gov>
+Message-Id: <201507191128.t6JBS4vJ027845@ssd.jpl.nasa.gov>
+Subject: MAJOR BODY #C(500@0)_T(628) (1/1)
+
+ Automated mail xmit by MAIL_REQUEST, PID=   20220 Sun Jul 19 04:28:04 2015
+++++++++++++++++++++++++++++++++ (part 1 of 1)  +++++++++++++++++++++++++++++++
+
+*******************************************************************************
+ Revised: Aug 11, 2014               Erriapus / (Saturn)                     628
+
+ For MEAN orbital elements, see  http://ssd.jpl.nasa.gov/sat_elem.html
+ Recently discovered Saturnian irregular.
+*******************************************************************************
+ 
+ 
+*******************************************************************************
+Ephemeris / MAIL_REQUEST Sun Jul 19 04:28:04 2015 Pasadena, USA  / Horizons    
+*******************************************************************************
+Target body name: Erriapus (628)                  {source: SAT368}
+Center body name: Solar System Barycenter (0)     {source: DE-0431LE-0431}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Stop  time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Step-size       : DISCRETE TIME-LIST
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : (undefined)                                                  
+Output units    : KM-S                                                         
+Output format   : 02
+Reference frame : ICRF/J2000.0                                                 
+Output type     : GEOMETRIC cartesian states
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+JDCT ,   , X, Y, Z, VX, VY, VZ,
+*******************************************************************************
+$$SOE
+2457222.500000000, A.D. 2015-Jul-19 00:00:00.0000, -6.859222611318330E+08, -1.348854790991627E+09,  6.503137802398908E+07,  8.542202106034523E+00, -5.177261912594157E+00, -2.351439857427582E-01,
+$$EOE
+*******************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    xy-plane: plane of the Earth's orbit at the reference epoch
+    x-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+Symbol meaning  
+
+    JDCT     Epoch Julian Date, Coordinate Time
+      X      x-component of position vector (km)                               
+      Y      y-component of position vector (km)                               
+      Z      z-component of position vector (km)                               
+      VX     x-component of velocity vector (km/sec)                           
+      VY     y-component of velocity vector (km/sec)                           
+      VZ     z-component of velocity vector (km/sec)                           
+
+Geometric states/elements have no aberration corrections applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.Giorgini@jpl.nasa.gov
+*******************************************************************************

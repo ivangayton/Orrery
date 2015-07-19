@@ -109,6 +109,7 @@ public class OrreryEngine implements GLEventListener{
             euler();
             if(camIsAffectedByGravity)camEuler();
             cam.moveOn();
+            // If we want the camera to be immobile with respect to the active body
             if(match)cam.match(frank[activeSprite].xVel, frank[activeSprite].yVel, frank[activeSprite].zVel);
             currTime = System.currentTimeMillis();
         }
@@ -121,7 +122,7 @@ public class OrreryEngine implements GLEventListener{
         gl.glLoadIdentity();
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-        glu.gluPerspective(30.0, aspect, near, far);
+        glu.gluPerspective(45.0, aspect, near, far);
         dBuf.rewind();
         gl.glMultMatrixd(dBuf);
         
@@ -135,7 +136,8 @@ public class OrreryEngine implements GLEventListener{
         
 	}
 	
-    private void reactToUserInput(){
+    @SuppressWarnings("unused")
+	private void reactToUserInput(){
     	if(joystickIndex != 99){
     		Controller jst = ControllerEnvironment.getDefaultEnvironment().getControllers()[joystickIndex];		
     		Component[] joystickComps = jst.getComponents();
