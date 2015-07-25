@@ -55,14 +55,14 @@ public class OrreryEngine implements GLEventListener{
     
   //Celestial bodies and associated stuff
     int sprites=15;
-    Body frank[]=new Body[sprites];
+    Body body[]=new Body[sprites];
     private Texture texture[] = new Texture[sprites];
     //private Texture cubemap[] = new Texture[6];
 
     //View sizing utility fields (manipulate bodies' apparent radii)
     public double bodyViewScaleFactor = 3E+9;
     public double bodyViewScaleLog = 1e6;
-    public DoubleBuffer dBuf;
+    public DoubleBuffer camMatrixBuffer;
     
     //Various user controls (toggles etc)
     private boolean camIsAffectedByGravity = false;
@@ -78,7 +78,7 @@ public class OrreryEngine implements GLEventListener{
     static GLU glu = new GLU();
    
     public void init(GLAutoDrawable drawable) {  	
-    	dBuf = DoubleBuffer.allocate(16);
+    	camMatrixBuffer = DoubleBuffer.allocate(16);
         GL2 gl = drawable.getGL().getGL2();
         System.err.println("INIT GL IS: " + gl.getClass().getName());
         gl.setSwapInterval(1);
@@ -89,12 +89,12 @@ public class OrreryEngine implements GLEventListener{
         //initializeTheBodies(gl);					//if we are gonna use call lists
         cr = new ControllerReader(this);
         cr.initControllers();
-        yaw = new Quat(this, "yaw",    0.0,0.0,1.0,0.0);
-        pitch = new Quat(this, "pitch",0.0,1.0,0.0,0.0);
-        roll = new Quat(this, "roll",  0.0,0.0,0.0,1.0);
-        camOrient = new Quat(this, "camOrient",0.0,1.0,0.0,0.0);
-        camOrient.createMatrix();   
-        cam = new Camera(this, 0, 0, -5E+11, 0, 0, 0); 
+        yaw = new Quat("yaw",    0.0,0.0,1.0,0.0);
+        pitch = new Quat("pitch",0.0,1.0,0.0,0.0);
+        roll = new Quat("roll",  0.0,0.0,0.0,1.0);
+        camOrient = new Quat("camOrient",0.0,1.0,0.0,0.0);
+        createMatrix(camOrient, camMatrixBuffer);   
+        cam = new Camera(timeStep, 0, 0, -5E+11, 0, 0, 0); 
         
         //loadCubemapTextures(gl);
         //drawTheCubemap(gl);
@@ -109,7 +109,7 @@ public class OrreryEngine implements GLEventListener{
             if(camIsAffectedByGravity)camEuler();
             cam.moveOn();
             // If we want the camera to be immobile with respect to the active body
-            if(match)cam.match(frank[activeSprite].xVel, frank[activeSprite].yVel, frank[activeSprite].zVel);
+            if(match)cam.match(body[activeSprite].xVel, body[activeSprite].yVel, body[activeSprite].zVel);
             currTime = System.currentTimeMillis();
         }
         GL2 gl = drawable.getGL().getGL2();
@@ -122,8 +122,8 @@ public class OrreryEngine implements GLEventListener{
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
         glu.gluPerspective(45.0, aspect, near, far);
-        dBuf.rewind();
-        gl.glMultMatrixd(dBuf);
+        camMatrixBuffer.rewind();
+        gl.glMultMatrixd(camMatrixBuffer);
         
         if(trails){drawTrails(gl);}
         
@@ -135,32 +135,63 @@ public class OrreryEngine implements GLEventListener{
         
 	}
 	
+    public void createMatrix(Quat q, DoubleBuffer dBuf){
+    	/* Takes a rotation from a quaternion and 
+    	 * bungs it into a 16-element DoubleBuffer.
+    	 * Does no deformation or translation, 
+    	 * provided the quat is normalized to unit
+    	 * (x^2 + y^2 + z^2 + w^2 = 1).
+    	 */
+    	dBuf.rewind();
+    	dBuf.put(1.0 - 2.0 * (q.y *q.y + q.z * q.z));
+    	dBuf.put(2.0 * (q.x * q.y + q.z * q.w));
+    	dBuf.put(2.0 * (q.x * q.z - q.y * q.w));
+    	dBuf.put(0.0);
 
+        // Second row
+    	dBuf.put(2.0 * (q.x * q.y - q.z * q.w));
+    	dBuf.put(1.0 - 2.0 * ( q.x * q.x + q.z * q.z));
+    	dBuf.put(2.0 * (q.z * q.y + q.x * q.w));
+    	dBuf.put(0.0);
+
+        // Third row
+    	dBuf.put(2.0 * (q.x * q.z + q.y * q.w));
+    	dBuf.put(2.0 * (q.y * q.z - q.x * q.w));
+    	dBuf.put(1.0 - 2.0 * (q.x * q.x + q.y * q.y));
+    	dBuf.put(0.0);
+
+        // Fourth row
+    	dBuf.put(0);
+    	dBuf.put(0);
+    	dBuf.put(0);
+    	dBuf.put(1.0);
+    }
+    
     private void euler(){
         for(int otLp=0;otLp<sprites;otLp++){
             for(int inLp=otLp+1;inLp<sprites;inLp++){
-                calcGravForce(frank[otLp].xPos, frank[otLp].yPos,
-                        frank[otLp].zPos,frank[inLp].xPos, frank[inLp].yPos,
-                        frank[inLp].zPos, frank[otLp].mass, frank[inLp].mass);
+                calcGravForce(body[otLp].xPos, body[otLp].yPos,
+                        body[otLp].zPos,body[inLp].xPos, body[inLp].yPos,
+                        body[inLp].zPos, body[otLp].mass, body[inLp].mass);
                 //apply the force to both bodies to update velocity
-                frank[otLp].xVel+=xF*(timeStep)/frank[otLp].mass;
-                frank[otLp].yVel+=yF*(timeStep)/frank[otLp].mass;
-                frank[otLp].zVel+=zF*(timeStep)/frank[otLp].mass;
-                frank[inLp].xVel-=xF*(timeStep)/frank[inLp].mass;
-                frank[inLp].yVel-=yF*(timeStep)/frank[inLp].mass;
-                frank[inLp].zVel-=zF*(timeStep)/frank[inLp].mass;
+                body[otLp].xVel+=xF*(timeStep)/body[otLp].mass;
+                body[otLp].yVel+=yF*(timeStep)/body[otLp].mass;
+                body[otLp].zVel+=zF*(timeStep)/body[otLp].mass;
+                body[inLp].xVel-=xF*(timeStep)/body[inLp].mass;
+                body[inLp].yVel-=yF*(timeStep)/body[inLp].mass;
+                body[inLp].zVel-=zF*(timeStep)/body[inLp].mass;
                 }
          }
         for(int Lp=0;Lp<sprites;Lp++){
-            frank[Lp].moveOn();
+            body[Lp].moveOn(timeStep);
          }
         }
     
     private void camEuler(){
     	for(int inLp=0;inLp<sprites;inLp++){
             calcGravForce(cam.xPos, cam.yPos,
-                    cam.zPos,frank[inLp].xPos, frank[inLp].yPos,
-                    frank[inLp].zPos, 1.0, frank[inLp].mass);
+                    cam.zPos,body[inLp].xPos, body[inLp].yPos,
+                    body[inLp].zPos, 1.0, body[inLp].mass);
             //apply the force to both bodies to update velocity
             cam.xVel+=xF*(timeStep);
             cam.yVel+=yF*(timeStep);
@@ -188,7 +219,7 @@ public class OrreryEngine implements GLEventListener{
        for(int bc=0; bc<sprites;bc++){
 	       gl.glNewList(bc, GL2.GL_COMPILE);
 		       texture[bc].bind(gl);
-		       glu.gluSphere(quad, frank[bc].displayRad, 32, 32);
+		       glu.gluSphere(quad, body[bc].displayRad, 32, 32);
 		       gl.glPopMatrix();
 	       gl.glEndList();
        }
@@ -204,11 +235,11 @@ public class OrreryEngine implements GLEventListener{
        
        for(int bc=0;bc<sprites;bc++){
            gl.glPushMatrix();
-           gl.glTranslated(frank[bc].xPos,frank[bc].yPos,frank[bc].zPos);
-           gl.glRotated(frank[bc].rot,0.0,0.0,1.0);
+           gl.glTranslated(body[bc].xPos,body[bc].yPos,body[bc].zPos);
+           gl.glRotated(body[bc].rot,0.0,0.0,1.0);
            //gl.glCallList(bc);
            if(texture[bc]!=null){texture[bc].bind(gl);}
-           glu.gluSphere(quad, frank[bc].displayRad, 32, 32);
+           glu.gluSphere(quad, body[bc].displayRad, 32, 32);
            gl.glPopMatrix();
        }
    }
@@ -235,42 +266,42 @@ public class OrreryEngine implements GLEventListener{
    public void drawTrails(GL2 gl){
 	   gl.glColor3d(1.0,0.0,0.0);
 	   for(int bc=0;bc<sprites;bc++){
-		   frank[bc].addPositionToBuffer();
-		   int whereInEarthPosBuf=frank[3].positions.position();
+		   body[bc].addPositionToBuffer();
+		   int whereInEarthPosBuf=body[3].positions.position();
 		   int vertices = whereInEarthPosBuf/3;
-		   int capacity = frank[bc].drawBuf.capacity()/3;
-		   frank[bc].drawBuf.rewind();
+		   int capacity = body[bc].drawBuf.capacity()/3;
+		   body[bc].drawBuf.rewind();
 		   
-		   if(!frank[bc].beenAroundTheBuffer){
-			   frank[bc].positions.rewind();
+		   if(!body[bc].beenAroundTheBuffer){
+			   body[bc].positions.rewind();
 			   for(int vc=0;vc<vertices;vc++){
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.xPos);
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.yPos);
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.zPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.xPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.yPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.zPos);
 		       }
 		   }else{
-			   int verticesBeforeWrapAround = frank[bc].positions.remaining()/3;
-			   int verticesAfterWrapAround = frank[bc].positions.position()/3;
+			   int verticesBeforeWrapAround = body[bc].positions.remaining()/3;
+			   int verticesAfterWrapAround = body[bc].positions.position()/3;
 			   for(int vc=0;vc<verticesBeforeWrapAround;vc++){
-				   frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.xPos);
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.yPos);
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.zPos);
+				   body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.xPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.yPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.zPos);
 			   }
-			   frank[bc].positions.rewind();
+			   body[bc].positions.rewind();
 			   for(int vc=0;vc<verticesAfterWrapAround;vc++){
-				   frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.xPos);
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.yPos);
-			       frank[bc].drawBuf.put(frank[bc].positions.get()+(float)cam.zPos);
+				   body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.xPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.yPos);
+			       body[bc].drawBuf.put(body[bc].positions.get()+(float)cam.zPos);
 			   }
 			   
 		   }
 		   
-		   frank[bc].drawBuf.rewind();
+		   body[bc].drawBuf.rewind();
 		   
 		   gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		   gl.glVertexPointer(3, GL.GL_FLOAT, 0, frank[bc].drawBuf);
+		   gl.glVertexPointer(3, GL.GL_FLOAT, 0, body[bc].drawBuf);
 		   
-		   if(!frank[bc].beenAroundTheBuffer){gl.glDrawArrays(GL2.GL_LINE_STRIP, 0, vertices);
+		   if(!body[bc].beenAroundTheBuffer){gl.glDrawArrays(GL2.GL_LINE_STRIP, 0, vertices);
 		   }else{gl.glDrawArrays(GL2.GL_LINE_STRIP, 0, capacity);}
 	   }
 	   gl.glColor3d(1.0,1.0,1.0);
@@ -360,61 +391,61 @@ public class OrreryEngine implements GLEventListener{
     
     public void createBodies(){
         //frame, mass, xyz position, xyz velocity, radius, rotation, color, name
-        frank[0]=new Body(this, 1.9891E+30,0,0,0,0,0,0,
+        body[0]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.9891E+30,0,0,0,0,0,0,
                 6.960E+8, 0.01, Color.yellow,"Sol");
-        frank[1]=new Body(this, 3.302E+23,
+        body[1]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 3.302E+23,
                 -3.78293771E+09,-5.72769421E+10,-1.20850781E+09,
                 3.08068297E+04,-2.45368742E+04,-4.83152927E+03,
                 2440000, 1.5, Color.ORANGE,"Mercury");
-        frank[2]=new Body(this, 4.8685E+24,
+        body[2]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 4.8685E+24,
                 9.52289702E+10,-5.24638070E+10,-6.21429374E+09,
                 1.66910514E+04,3.05279941E+04,-5.45208833E+02
                 ,6051800, -0.1, Color.LIGHT_GRAY,"Venus");
-        frank[3]=new Body(this, 5.9736E+24,
+        body[3]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 5.9736E+24,
                 -1.07774006E+11,1.00721001E+11,-1.58200190E+06,
                 -2.08316700E+04,-2.18679892E+04,1.36077086E-01,
                 6371010, 1.0, Color.blue,"EarthBig");
-        frank[4]=new Body(this, 6.4185E+23
+        body[4]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 6.4185E+23
                 ,-1.67994049E+11,1.81111933E+11,7.92011024E+09,
                 -1.68487765E+04,-1.44155821E+04,1.11668146E+02,
                 3389900, 0.4, Color.red,"Mars");
-        frank[5]=new Body(this, 1.89813E+27
+        body[5]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.89813E+27
                 ,6.90612154E+11,-2.85025804E+11,-1.42712333E+10,
                 4.82770973E+03,1.27088853E+04,-1.60808278E+02,
                 69911000, 0.2, Color.PINK,"Jupiter");
-        frank[6]=new Body(this, 5.68319E+26,
+        body[6]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 5.68319E+26,
                 -1.41793448E+12,8.62472752E+09,5.62891823E+10,
                 -5.74771456E+02,-9.67002989E+03,1.91217133E+02,
                 5.8232E+07, 0.1, Color.cyan,"Saturn");
-        frank[7]=new Body(this, 8.68103E+25,
+        body[7]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 8.68103E+25,
                 2.99883822E+12,-2.09122902E+11,-3.96210014E+10,
                 4.27752726E+02,6.48593051E+03,1.85226826E+01,
                 2.5362E+07, 0.4, Color.green,"Uranus");
-        frank[8]=new Body(this, 1.0241E+26,
+        body[8]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.0241E+26,
                 3.72198707E+12,-2.51372200E+12,-3.40065179E+10,
                 3.01141894E+03,4.54639376E+03,-1.63198106E+02
                 ,2.4624E+07, 0.2, Color.CYAN,"Neptune");
-        frank[9]=new Body(this, 1.314E+22,
+        body[9]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.314E+22,
                 2.60717742E+11,-4.72774464E+12,4.30601443E+11,
                 5.51500870E+03,-7.48406599E+02,-1.50327268E+03,
                 1.1510E+06, 0.05, Color.GRAY,"Pluto");      
-        frank[10]=new Body(this, 7.349E+22,
+        body[10]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 7.349E+22,
                 -1.08036506E+11,1.00439317E+11,-3.32957877E+07,
                 -2.01401267E+04,-2.26075236E+04,3.56145881E+01,
                 1.7375E+06, 0.0035, Color.GRAY,"Luna");
-        frank[11]=new Body(this, 8.933E+22,
+        body[11]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 8.933E+22,
                 6.91025244E+11,-2.85117847E+11,-1.42687444E+10,
                 8.61678771E+03,2.95525666E+04,4.90362955E+02,
                 1.8210E+06, 0.6, Color.RED,"Io");
-        frank[12]=new Body(this, 4.79E+22,
+        body[12]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 4.79E+22,
                 6.90559422E+11,-2.84358736E+11,-1.42450216E+10,
                 -8.90929515E+03,1.17570206E+04,-2.96109472E+02,
                 1565000, 0.8, Color.BLUE,"Europa");
-        frank[13]=new Body(this, 1.482E+23,
+        body[13]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.482E+23,
                 6.91201090E+11,-2.84131518E+11,-1.42301735E+10,
                 -4.24567411E+03,1.86928669E+04,-4.99140032E+01,
                 2.6340E+06, 0.3, Color.DARK_GRAY,"Ganymede");
-        frank[14]=new Body(this, 1.076E+23,
+        body[14]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.076E+23,
                 6.90776911E+11,-2.83152274E+11,-1.42087495E+10,
                 -3.34373019E+03,1.34924351E+04,-2.45156223E+02,
                 2.4030E+06, 0.3, Color.GRAY,"Callisto");
@@ -423,7 +454,7 @@ public class OrreryEngine implements GLEventListener{
     public void loadBodyTextures(GL2 gl){
         for(int bc=0;bc<sprites;bc++){
             try {
-            	String toLoad = "images/" + frank[bc].name + ".png";
+            	String toLoad = "images/" + body[bc].name + ".png";
             	System.out.println("Loading image for " + toLoad);
                 InputStream stream = getClass().getResourceAsStream(toLoad);
                 texture[bc] = TextureIO.newTexture(stream, false, "png");

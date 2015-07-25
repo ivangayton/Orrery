@@ -5,7 +5,6 @@ import java.nio.FloatBuffer;
 import com.jogamp.common.nio.Buffers;
 
 public class Body {
-    private OrreryEngine oe;
     public double mass;//kilograms
     public double xPos,yPos,zPos;//Meters
     public double xVel,yVel,zVel;//m/s
@@ -22,10 +21,9 @@ public class Body {
     public boolean beenAroundTheBuffer;
  
 
-        public Body(OrreryEngine orEn, double masser,
+        public Body(double bodyViewScaleLog, double bodyViewScaleFactor, double masser,
             double xP, double yP, double zP, double xV, double yV, double zV,
             double radius, double rotation, Color col, String nameO){
-        	oe=orEn;
         	mass=masser;
         	xPos=xP;
         	yPos=yP;
@@ -37,18 +35,18 @@ public class Body {
         	rotspeed=rotation/(86400*rotFudgeFact);
         	theColor=col;
         	name=nameO;
-        	displayRad=Math.log(rad/oe.bodyViewScaleLog)*oe.bodyViewScaleFactor;
+        	displayRad=Math.log(rad/bodyViewScaleLog)*bodyViewScaleFactor;
         	positions=Buffers.newDirectFloatBuffer(3000);
         	positions.rewind();
         	drawBuf=Buffers.newDirectFloatBuffer(3000);
         	beenAroundTheBuffer=false;
         }
 
-        public void moveOn(){
-        	xPos += xVel*oe.timeStep;
-        	yPos += yVel*oe.timeStep;
-        	zPos += zVel*oe.timeStep;
-        	rot += rotspeed * oe.timeStep;
+        public void moveOn(double timeStep){
+        	xPos += xVel*timeStep;
+        	yPos += yVel*timeStep;
+        	zPos += zVel*timeStep;
+        	rot += rotspeed * timeStep;
         }
         public void addPositionToBuffer(){
         	if(positions.remaining()<3){
@@ -62,7 +60,6 @@ public class Body {
         		positions.put((float)yPos);
         		positions.put((float)zPos);
         	}
-        	
         }
         
 

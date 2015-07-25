@@ -1,15 +1,15 @@
 package net.turkus;
 
 public class Camera {
-    private OrreryEngine oe;
     public double mass = 1;//kg
     public double xPos,yPos,zPos;//meters
     public double xVel,yVel,zVel;//m/s
+    private double timeStep;
 
-    public Camera(OrreryEngine orEn,
+    public Camera(double tS,
             double xP, double yP, double zP,
             double xV, double yV, double zV){
-        oe=orEn;
+    	timeStep = tS;
         xPos = xP;
         yPos = yP;
         zPos = zP;
@@ -19,16 +19,14 @@ public class Camera {
     }
 
     public void moveOn(){
-        xPos += xVel*oe.timeStep;
-        yPos += yVel*oe.timeStep;
-        zPos += zVel*oe.timeStep;
+        xPos += xVel*timeStep;
+        yPos += yVel*timeStep;
+        zPos += zVel*timeStep;
     }
 
     public void match(double x, double y, double z){//velocity of body to match
-        xPos -= x*oe.timeStep;
-        yPos -= y*oe.timeStep;
-        zPos -= z*oe.timeStep;
-
-
+        xPos -= x*timeStep;
+        yPos -= y*timeStep;
+        zPos -= z*timeStep;
     }
 }
