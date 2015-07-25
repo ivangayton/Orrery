@@ -36,7 +36,7 @@ public class ControllerReader {
 	private int xGI, yGI, zGI, pitchGI, yawGI, rollGI, stopGI, reverseGI,
 		slowSimGI, speedSimGI, bodiesSmallerGI, bodiesBiggerGI, 
 		sensitivityDownGI, sensitivityUpGI;
-	// Now same for the keyboard
+	// Now same for the keyboard (KI = KeyboardIndex)
 	private int xKI, yKI, zKI, pitchKI, yawKI, rollKI, stopKI, reverseKI,
 		slowSimKI, speedSimKI, bodiesSmallerKI, bodiesBiggerKI, 
 		sensitivityDownKI, sensitivityUpKI;
@@ -52,7 +52,7 @@ public class ControllerReader {
 	    			+ "If this fucks up in Linux, you may need to "
 	    			+ "sudo chmod a+r /dev/input/event[whichever is keyboard]");
 			ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
-			// TODO: for some reason this method makes a lot of noise on the console
+			// TODO for some reason this method makes a lot of noise on the console
 			Controller[] cs = ce.getControllers();
 			gamepadIndex = 99;
 			keyboardIndex = 99;
@@ -84,14 +84,18 @@ public class ControllerReader {
 	
     void reactToUserInput(){
     	if(gamepadIndex != 99){
-    		Controller jst = ControllerEnvironment.getDefaultEnvironment().getControllers()[gamepadIndex];		
-    		Component[] gamepadComps = jst.getComponents();
-    		jst.poll();
+    		Controller gamepad = ControllerEnvironment.getDefaultEnvironment().
+    				getControllers()[gamepadIndex];		
+    		Component[] gamepadComps = gamepad.getComponents();
+    		gamepad.poll();
+    		
     		float lX = gamepadComps[analogCompIndex[0]].getPollData();
     		float lY = gamepadComps[analogCompIndex[1]].getPollData();
     		float rX = gamepadComps[analogCompIndex[3]].getPollData();
     		float rY = gamepadComps[analogCompIndex[4]].getPollData();
     		
+    		
+    		// TODO use Math.abs() instead of squaring
     		if(rX*rX>=deadStickZone){
         		if(gamepadComps[11].getPollData()==0.0f){
         			// Yaw
