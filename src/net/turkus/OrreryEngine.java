@@ -26,7 +26,7 @@ import net.java.games.input.Component;
 public class OrreryEngine implements GLEventListener{
     //Timer-related fields
     public double timeStep = 50;
-    private double timeStepMonitor = timeStep;
+    double timeStepMonitor = timeStep;
     double simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
     static int FPS = 60;
     private long currTime;
@@ -37,25 +37,25 @@ public class OrreryEngine implements GLEventListener{
     private double far = 4E+13;
     
     //Camera, rotation, and translation-related fields
-    private Camera cam;
-    private float camRotSpeed = 0.05f;
+    Camera cam;
+    float camRotSpeed = 0.05f;
     public Quat camOrient;
     public Quat yaw;
     public Quat pitch;
     public Quat roll;
-    private double camAccel = 5E+3;
-    private double camAccelMonitor = camAccel;
+    double camAccel = 5E+3;
+    double camAccelMonitor = camAccel;
     double camLineY= Math.log((camAccel/camAccelMonitor)+1)-0.9;
-    private boolean reverse=false;
-    private boolean reverseButton=false;
+    boolean reverse=false;
+    boolean reverseButton=false;
     
     //Physics fields
     private double distance, distSq, gPull, xF, yF, zF; //for Euler integration
     private static double gravConst=6.67E-11;           //Gravitational constant
     
   //Celestial bodies and associated stuff
-    private int sprites=15;
-    private Body frank[]=new Body[sprites];
+    int sprites=15;
+    Body frank[]=new Body[sprites];
     private Texture texture[] = new Texture[sprites];
     //private Texture cubemap[] = new Texture[6];
 
@@ -69,14 +69,11 @@ public class OrreryEngine implements GLEventListener{
     private boolean trails=false;
     private boolean match=false;
     private int activeSprite=3;
+    
+    // Controller stuss
+    ControllerReader cr;
 
-    //Joystick stuff
-    static int gamepadIndex;
-    static int keyboardIndex;
-    static int stickIndex;
-    static int[] analogCompIndex = new int[6];
-    static float deadStickZone=0.02f;
-              
+
     //OpenGL stuff
     static GLU glu = new GLU();
    
@@ -90,7 +87,8 @@ public class OrreryEngine implements GLEventListener{
         createBodies();
         loadBodyTextures(gl);
         //initializeTheBodies(gl);					//if we are gonna use call lists
-        initControllers();
+        cr = new ControllerReader(this);
+        cr.initControllers();
         yaw = new Quat(this, "yaw",    0.0,0.0,1.0,0.0);
         pitch = new Quat(this, "pitch",0.0,1.0,0.0,0.0);
         roll = new Quat(this, "roll",  0.0,0.0,0.0,1.0);
@@ -105,7 +103,7 @@ public class OrreryEngine implements GLEventListener{
     public void display(GLAutoDrawable drawable) {
     	currTime = System.currentTimeMillis();
         stopTime = currTime+interval-12;
-        reactToUserInput();
+        cr.reactToUserInput();
         while(stopTime>currTime){
             euler();
             if(camIsAffectedByGravity)camEuler();
@@ -137,211 +135,7 @@ public class OrreryEngine implements GLEventListener{
         
 	}
 	
-    private void reactToUserInput(){
-    	if(gamepadIndex != 99){
-    		Controller jst = ControllerEnvironment.getDefaultEnvironment().getControllers()[gamepadIndex];		
-    		Component[] gamepadComps = jst.getComponents();
-    		jst.poll();
-    		float lX = gamepadComps[analogCompIndex[0]].getPollData();
-    		float lY = gamepadComps[analogCompIndex[1]].getPollData();
-    		float rX = gamepadComps[analogCompIndex[3]].getPollData();
-    		float rY = gamepadComps[analogCompIndex[4]].getPollData();
-    		if(rX*rX>=deadStickZone){
-        		if(gamepadComps[11].getPollData()==0.0f){
-        			yaw.setQuat(rX*rX*rX*camRotSpeed, 0.0, 1.0, 0.0);
-        			camOrient.multQuatBy(yaw);
-        		}else{
-        			roll.setQuat(rX*rX*rX*camRotSpeed,   0.0, 0.0, 1.0);
-        			camOrient.multQuatBy(roll);
-        		}		
-        	}
-    		if(lY*lY>=deadStickZone){
-        		if(gamepadComps[10].getPollData()==0.0f){
-        			cam.xVel -= (lY*lY*lY*camAccel*dBuf.get(2))/timeStep;
-        			cam.yVel -= (lY*lY*lY*camAccel*dBuf.get(6))/timeStep;
-        			cam.zVel -= (lY*lY*lY*camAccel*dBuf.get(10))/timeStep;
-        		}else{
-        			cam.xVel += (lY*lY*lY*camAccel*dBuf.get(1))/timeStep;
-        			cam.yVel += (lY*lY*lY*camAccel*dBuf.get(5))/timeStep;
-        			cam.zVel += (lY*lY*lY*camAccel*dBuf.get(9))/timeStep;      			
-        		}          
-            }
-    		if(rY*rY>=deadStickZone){
-        		pitch.setQuat(-rY*rY*rY*camRotSpeed, 1.0, 0.0, 0.0);
-        		camOrient.multQuatBy(pitch);
-        	}
-    		if(lX*lX>=deadStickZone){
-                cam.xVel -= (lX*lX*lX*camAccel*dBuf.get(0))/timeStep;
-                cam.yVel -= (lX*lX*lX*camAccel*dBuf.get(4))/timeStep;
-                cam.zVel -= (lX*lX*lX*camAccel*dBuf.get(8))/timeStep;
-            }
-    		if(gamepadComps[4].getPollData()==1.0f){
-                cam.xVel = 0.0;
-                cam.yVel = 0.0;
-                cam.zVel = 0.0;
-            }
-    		
-    		if(gamepadComps[1].getPollData()==1.0f){
-    			timeStep*=0.95;
-    			simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
-    			}
-            if(gamepadComps[2].getPollData()==1.0f){
-            	timeStep/=0.95;
-            	simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
-            	}
-            
-            if(gamepadComps[3].getPollData()==1.0f){
-                bodyViewScaleFactor *= 1.01;
-                for(int bc=0;bc<sprites;bc++){
-                    frank[bc].displayRad=Math.log(frank[bc].rad/bodyViewScaleLog)*bodyViewScaleFactor;
-                }
-            }
-            if(gamepadComps[0].getPollData()==1.0f){
-                bodyViewScaleFactor /=1.01;
-                for(int bc=0;bc<sprites;bc++){
-                    frank[bc].displayRad=Math.log(frank[bc].rad/bodyViewScaleLog)*bodyViewScaleFactor;
-                }
-            }
-            if(gamepadComps[5].getPollData()==1.0f){
-            	if(!reverseButton){
-            	    reverse=!reverse;
-            	    reverseButton=true;
-            	}
-            }
-            	
-            if(gamepadComps[5].getPollData()==0.0f){
-            	reverseButton=false;
-            }
-            if(gamepadComps[16].getPollData()==0.25f){
-            	camAccel *= 1.05;
-            	camLineY= Math.log((camAccel/camAccelMonitor)+1)-0.9;
-            	
-            }
-            if(gamepadComps[16].getPollData()==0.75f){
-            	camAccel /= 1.05;
-            	camLineY= Math.log((camAccel/camAccelMonitor)+1)-0.9;
-            }
-            if(gamepadComps[16].getPollData()==0.5f){
-            	
-            }
-            if(gamepadComps[16].getPollData()==1.0f){
-            	
-            }
-            
-            
-    	}
-    	if(keyboardIndex != 99){
-			Controller kbd = ControllerEnvironment.getDefaultEnvironment().getControllers()[keyboardIndex];		
-			Component[] keyboardComps = kbd.getComponents();
-			kbd.poll();
-			
-			if(keyboardComps[21].getPollData()==1.0f){ // k (yaw left)
-				yaw.setQuat(-0.1*camRotSpeed, 0.0, 1.0, 0.0);
-	    		camOrient.multQuatBy(yaw);
-			}	
-			if(keyboardComps[58].getPollData()==1.0f){ // ; (yaw right)
-				yaw.setQuat(0.1*camRotSpeed, 0.0, 1.0, 0.0);
-	    		camOrient.multQuatBy(yaw);
-			}	
-			if(keyboardComps[25].getPollData()==1.0f){ // o (pitch up)
-				pitch.setQuat(-0.1*camRotSpeed, 1.0, 0.0, 0.0);
-	    		camOrient.multQuatBy(pitch);
-			}
-			if(keyboardComps[22].getPollData()==1.0f){ // l (pitch down)
-				pitch.setQuat(0.1*camRotSpeed, 1.0, 0.0, 0.0);
-	    		camOrient.multQuatBy(pitch);
-			}
-			if(keyboardComps[19].getPollData()==1.0f){ // i (roll left)
-				roll.setQuat(-0.1*camRotSpeed, 0.0, 0.0, 1.0);
-	    		camOrient.multQuatBy(roll);
-			}
-			if(keyboardComps[26].getPollData()==1.0f){ // p (roll right)
-				roll.setQuat(0.1*camRotSpeed, 0.0, 0.0, 1.0);
-	    		camOrient.multQuatBy(roll);
-			}
-	    	//Simulation speed control
-	        if(keyboardComps[1].getPollData()==1.0f){ // 1 (slow down)
-	        	timeStep*=0.95;
-	        	simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
-	        	}
-	        if(keyboardComps[2].getPollData()==1.0f){ // 2 (speed up)
-	        	timeStep/=0.95;
-	        	simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
-	        	}
-	        if(reverse&&timeStep>0){timeStep*=-1;}
-	        if(!reverse&&timeStep<0){timeStep*=-1;}
-	        
-	    	camOrient.createMatrix();
-	    
-	    	//Translation
-	    	
-	        if(keyboardComps[56].getPollData()==1.0f){
-	            cam.xVel = 0.0;
-	            cam.yVel = 0.0;
-	            cam.zVel = 0.0;
-	        }
-	        
-	        if(keyboardComps[42].getPollData()==1.0f){
-	        	camAccel *= 1.05;
-	        	camLineY= Math.log((camAccel/camAccelMonitor)+1)-0.9;
-	        	
-	        }
-	        if(keyboardComps[41].getPollData()==1.0f){
-	        	camAccel /= 1.05;
-	        	camLineY= Math.log((camAccel/camAccelMonitor)+1)-0.9;
-	        }
-	
-	        //Body size
-	        if(keyboardComps[4].getPollData()==1.0f){
-	            bodyViewScaleFactor *= 1.01;
-	            for(int bc=0;bc<sprites;bc++){
-	                frank[bc].displayRad=Math.log(frank[bc].rad/bodyViewScaleLog)*bodyViewScaleFactor;
-	            }
-	        }
-	        if(keyboardComps[3].getPollData()==1.0f){
-	            bodyViewScaleFactor /=1.01;
-	            for(int bc=0;bc<sprites;bc++){
-	                frank[bc].displayRad=Math.log(frank[bc].rad/bodyViewScaleLog)*bodyViewScaleFactor;
-	            }
-	        }
-	        
-	        if(keyboardComps[11].getPollData()==1.0f){				//a left
-	        	cam.xVel += (10*camAccel*dBuf.get(0))/timeStep;
-	            cam.yVel += (10*camAccel*dBuf.get(4))/timeStep;
-	            cam.zVel += (10*camAccel*dBuf.get(8))/timeStep;
-	        }
-	        
-	        if(keyboardComps[14].getPollData()==1.0f){				//d right
-	        	cam.xVel -= (10*camAccel*dBuf.get(0))/timeStep;
-	            cam.yVel -= (10*camAccel*dBuf.get(4))/timeStep;
-	            cam.zVel -= (10*camAccel*dBuf.get(8))/timeStep;
-	        }
-	        
-	        if(keyboardComps[16].getPollData()==1.0f){				//f down
-	        	cam.xVel += (10*camAccel*dBuf.get(1))/timeStep;
-				cam.yVel += (10*camAccel*dBuf.get(5))/timeStep;
-				cam.zVel += (10*camAccel*dBuf.get(9))/timeStep; 
-	        }
-	        
-	        if(keyboardComps[28].getPollData()==1.0f){				//r up
-	        	cam.xVel -= (10*camAccel*dBuf.get(1))/timeStep;
-				cam.yVel -= (10*camAccel*dBuf.get(5))/timeStep;
-				cam.zVel -= (10*camAccel*dBuf.get(9))/timeStep; 
-	        }
-	        
-	        if(keyboardComps[33].getPollData()==1.0f){				//w fore
-	        	cam.xVel += (10*camAccel*dBuf.get(2))/timeStep;
-				cam.yVel += (10*camAccel*dBuf.get(6))/timeStep;
-				cam.zVel += (10*camAccel*dBuf.get(10))/timeStep;
-	        }
-	        
-	        if(keyboardComps[29].getPollData()==1.0f){				//s aft
-	        	cam.xVel -= (10*camAccel*dBuf.get(2))/timeStep;
-				cam.yVel -= (10*camAccel*dBuf.get(6))/timeStep;
-				cam.zVel -= (10*camAccel*dBuf.get(10))/timeStep;
-	        }
-    	}
-    }
+
     private void euler(){
         for(int otLp=0;otLp<sprites;otLp++){
             for(int inLp=otLp+1;inLp<sprites;inLp++){
@@ -654,34 +448,6 @@ public class OrreryEngine implements GLEventListener{
             }
         }
     }*/
-    
-    private static void initControllers(){
-    	System.out.println("Initializing controllers.  If this fucks up in Linux, you may need to sudo chmod a+r /dev/input/event3");
-		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
-		Controller[] cs = ce.getControllers();
-		gamepadIndex = 99;
-		keyboardIndex = 99;
-		stickIndex = 99;
-		for (int i = 0; i < cs.length; i++) {
-			if(cs[i].getType()==Controller.Type.GAMEPAD){gamepadIndex=i;}
-			if(cs[i].getType()==Controller.Type.KEYBOARD){keyboardIndex=i;}
-			if(cs[i].getType()==Controller.Type.STICK){stickIndex=i;}
-		}
-		if(gamepadIndex != 99){
-			Component[] comps = cs[gamepadIndex].getComponents();
-			if (comps.length > 0) {
-				int analogCompCounter=0;
-				for(int i=0;i<comps.length;i++){
-					if(comps[i].isAnalog()){
-						System.out.println("assigning index " + i + 
-								" to analog controller " + analogCompCounter);
-						analogCompIndex[analogCompCounter]=i;
-						analogCompCounter++;
-					}
-				}	
-			}
-		}
-	}
 	
 	public void dispose(GLAutoDrawable drawable) {}
 
