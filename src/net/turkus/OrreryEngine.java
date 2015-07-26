@@ -103,7 +103,8 @@ public class OrreryEngine implements GLEventListener{
     public void display(GLAutoDrawable drawable) {
     	currTime = System.currentTimeMillis();
         stopTime = currTime+interval-12;
-        cr.reactToUserInput();
+        cr.pollUserInput();
+        applyUserInput();
         while(stopTime>currTime){
             euler();
             if(camIsAffectedByGravity)camEuler();
@@ -132,8 +133,22 @@ public class OrreryEngine implements GLEventListener{
         gl.glTranslated(cam.xPos, cam.yPos, cam.zPos);
         drawTheBodies(gl);
         gl.glFlush();
-        
 	}
+    
+    public void applyUserInput(){
+    	if(cr.pitch != 0){
+			pitch.setQuat(cr.pitch * camRotSpeed, 1.0, 0.0, 0.0);
+			camOrient.multQuatBy(pitch);
+    	}
+    	if(cr.yaw != 0){
+    	yaw.setQuat(cr.yaw * camRotSpeed, 0.0, 1.0, 0.0);
+		camOrient.multQuatBy(yaw);
+    	}
+    	if(cr.roll != 0){
+        	roll.setQuat(cr.roll * camRotSpeed, 0.0, 0.0, 1.0);
+    		camOrient.multQuatBy(roll);
+        	}
+    }
 	
     public void createMatrix(Quat q, DoubleBuffer dBuf){
     	/* Takes a rotation from a quaternion and 
