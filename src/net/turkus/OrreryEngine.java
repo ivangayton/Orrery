@@ -19,14 +19,11 @@ import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.Component;
-
 public class OrreryEngine implements GLEventListener{
     //Timer-related fields
     public double timeStep = 50;
     double timeStepMonitor = timeStep;
+    // TODO figure out a good representation of control sensitivity
     double simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
     static int FPS = 60;
     private long currTime;
@@ -44,14 +41,13 @@ public class OrreryEngine implements GLEventListener{
     public Quat pitch;
     public Quat roll;
     double camAccel = 5E+3;
-    double camAccelMonitor = camAccel;
-    double camLineY= Math.log((camAccel/camAccelMonitor)+1)-0.9;
+    double camAccelInitialPosition = camAccel;
+    double camLineY= Math.log((camAccel/camAccelInitialPosition)+1.5)-0.9;
     boolean reverse=false;
-    boolean reverseButton=false;
     
     //Physics fields
-    private double distance, distSq, gPull, xF, yF, zF; //for Euler integration
-    private static double gravConst=6.67E-11;           //Gravitational constant
+    private double xF, yF, zF; //for Euler integration
+    private static double gravitationalConstant=6.67E-11;
     
   //Celestial bodies and associated stuff
     int sprites=15;
@@ -66,7 +62,6 @@ public class OrreryEngine implements GLEventListener{
     
     //Various user controls (toggles etc)
     private boolean camIsAffectedByGravity = false;
-    private boolean trails=false;
     private boolean match=false;
     private int activeSprite=3;
     
@@ -87,7 +82,7 @@ public class OrreryEngine implements GLEventListener{
         createBodies();
         loadBodyTextures(gl);
         //initializeTheBodies(gl);					//if we are gonna use call lists
-        cr = new ControllerReader(this);
+        cr = new ControllerReader();
         cr.initControllers();
         yaw = new Quat("yaw",    0.0,0.0,1.0,0.0);
         pitch = new Quat("pitch",0.0,1.0,0.0,0.0);
@@ -105,6 +100,8 @@ public class OrreryEngine implements GLEventListener{
         stopTime = currTime+interval-12;
         cr.pollUserInput();
         applyUserInput();
+        // Apply rotation
+    	camOrient.createMatrix(camMatrixBuffer);
         while(stopTime>currTime){
             euler();
             if(camIsAffectedByGravity)camEuler();
@@ -126,7 +123,7 @@ public class OrreryEngine implements GLEventListener{
         camMatrixBuffer.rewind();
         gl.glMultMatrixd(camMatrixBuffer);
         
-        if(trails){drawTrails(gl);}
+        if(cr.trails){drawTrails(gl);}
         
         //gl.glColor3d(1.0, 1.0, 1.0);
         //gl.glCallList(1);
@@ -136,6 +133,7 @@ public class OrreryEngine implements GLEventListener{
 	}
     
     public void applyUserInput(){
+    	// Rotations
     	if(cr.pitch != 0){
 			pitch.setQuat(cr.pitch * camRotSpeed, 1.0, 0.0, 0.0);
 			camOrient.multQuatBy(pitch);
@@ -148,6 +146,64 @@ public class OrreryEngine implements GLEventListener{
         	roll.setQuat(cr.roll * camRotSpeed, 0.0, 0.0, 1.0);
     		camOrient.multQuatBy(roll);
         	}
+    	
+    	// Translations
+    	if(cr.foreAft != 0){
+    		cam.xVel += (cr.foreAft*camAccel*camMatrixBuffer.get(2))/timeStep;
+        	cam.yVel += (cr.foreAft*camAccel*camMatrixBuffer.get(6))/timeStep;
+        	cam.zVel += (cr.foreAft*camAccel*camMatrixBuffer.get(10))/timeStep;
+    	}
+        if(cr.rightLeft != 0){				
+        	cam.xVel += (cr.rightLeft*camAccel*camMatrixBuffer.get(0))/timeStep;
+        	cam.yVel += (cr.rightLeft*camAccel*camMatrixBuffer.get(4))/timeStep;
+        	cam.zVel += (cr.rightLeft*camAccel*camMatrixBuffer.get(8))/timeStep;
+        }
+        if(cr.upDown != 0){				
+        	cam.xVel += (cr.upDown*camAccel*camMatrixBuffer.get(1))/timeStep;
+        	cam.yVel += (cr.upDown*camAccel*camMatrixBuffer.get(5))/timeStep;
+        	cam.zVel += (cr.upDown*camAccel*camMatrixBuffer.get(9))/timeStep; 
+        }
+    	if(cr.stop){
+    		cam.xVel = 0.0;
+        	cam.yVel = 0.0;
+        	cam.zVel = 0.0;
+    	}
+    	
+    	// Sim controls
+    	if(cr.speedSim){
+    		timeStep/=0.95;
+        	simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
+    	}
+    	if(cr.slowSim){
+    		timeStep*=0.95;
+    		simSpeedLineY = Math.log((timeStep/timeStepMonitor)+1)-0.9;
+    	}
+    	
+    	if(cr.bodiesSmaller){
+        	bodyViewScaleFactor /=1.01;
+            for(int bc=0;bc<sprites;bc++){
+            	body[bc].displayRad=Math.log(body[bc].rad/
+            			bodyViewScaleLog)*bodyViewScaleFactor;
+            }
+        }
+    	if(cr.bodiesBigger){
+        	bodyViewScaleFactor *= 1.01;
+            for(int bc=0;bc<sprites;bc++){
+            	body[bc].displayRad=Math.log(body[bc].rad/
+            			bodyViewScaleLog)*bodyViewScaleFactor;
+            }
+        }
+    	if(cr.sensitivityDown){
+        	camAccel /= 1.05;
+        	camLineY= Math.log((camAccel/camAccelInitialPosition)+1.5)-0.9;
+        }
+    	if(cr.sensitivityUp){
+        	camAccel *= 1.05;
+        	camLineY= Math.log((camAccel/camAccelInitialPosition)+1.5)-0.9;
+        }
+        
+    	if(cr.reverse&&timeStep>0) timeStep*=-1;
+        if(!cr.reverse&&timeStep<0) timeStep*=-1;
     }
 	
     public void createMatrix(Quat q, DoubleBuffer dBuf){
@@ -216,9 +272,9 @@ public class OrreryEngine implements GLEventListener{
     
     private void calcGravForce(double pX1, double pY1, double pZ1, double pX2,
            double pY2, double pZ2, double m1, double m2){
-       distSq=(pX2-pX1)*(pX2-pX1)+(pY2-pY1)*(pY2-pY1)+(pZ2-pZ1)*(pZ2-pZ1);
-       gPull=(1/(distSq))*(m1)*m2*gravConst;
-       distance=Math.sqrt(distSq);
+       double distSq=(pX2-pX1)*(pX2-pX1)+(pY2-pY1)*(pY2-pY1)+(pZ2-pZ1)*(pZ2-pZ1);
+       double gPull=(1/(distSq))*(m1)*m2*gravitationalConstant;
+       double distance=Math.sqrt(distSq);
        xF=gPull/distance*(pX2-pX1);
        yF=gPull/distance*(pY2-pY1);
        zF=gPull/distance*(pZ2-pZ1);
@@ -238,7 +294,6 @@ public class OrreryEngine implements GLEventListener{
 		       gl.glPopMatrix();
 	       gl.glEndList();
        }
-       
    }
    
    public void drawTheBodies(GL2 gl){

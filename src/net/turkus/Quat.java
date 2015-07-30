@@ -1,5 +1,7 @@
 package net.turkus;
 
+import java.nio.DoubleBuffer;
+
 public class Quat {
     public double x,y,z,w;
     private double squaredMagn;
@@ -49,6 +51,37 @@ public class Quat {
         z =  q2.x * y - q2.y * x + q2.z * w + q2.w * z;
         w = -q2.x * x - q2.y * y - q2.z * z + q2.w * w;
         if(this.getSquaredMagn()<0.999||this.getSquaredMagn()>1.001){this.normalize();}
+    }
+    public void createMatrix(DoubleBuffer dBuf){
+    	/* Takes a rotation from a quaternion and 
+    	 * bungs it into a 16-element DoubleBuffer.
+    	 * Does no deformation or translation, 
+    	 * provided the quat is normalized to unit
+    	 * (x^2 + y^2 + z^2 + w^2 = 1).
+    	 */
+    	dBuf.rewind();
+    	dBuf.put(1.0 - 2.0 * (y *y + z * q.z));
+    	dBuf.put(2.0 * (x * y + z * w));
+    	dBuf.put(2.0 * (x * z - y * w));
+    	dBuf.put(0.0);
+
+        // Second row
+    	dBuf.put(2.0 * (x * y - z * w));
+    	dBuf.put(1.0 - 2.0 * ( x * x + z * z));
+    	dBuf.put(2.0 * (z * y + x * w));
+    	dBuf.put(0.0);
+
+        // Third row
+    	dBuf.put(2.0 * (x * z + y * w));
+    	dBuf.put(2.0 * (y * z - x * w));
+    	dBuf.put(1.0 - 2.0 * (x * x + y * y));
+    	dBuf.put(0.0);
+
+        // Fourth row
+    	dBuf.put(0);
+    	dBuf.put(0);
+    	dBuf.put(0);
+    	dBuf.put(1.0);
     }
 }
 

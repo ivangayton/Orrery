@@ -5,7 +5,7 @@ import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
 public class ControllerReader {
-	private OrreryEngine oe;
+	// private OrreryEngine oe;
 	
     // Indices to find various devices and components
     private static int gamepadIndex;
@@ -16,6 +16,7 @@ public class ControllerReader {
     private static int[] analogCompIndex = new int[6];
     
     private static float deadStickZone=0.004f;
+    private float keySpinMult = 0.01f;
     
     /*
      * Variables for main engine to query to ascertain user intention/actions.
@@ -28,22 +29,28 @@ public class ControllerReader {
      * available actions and hit whichever button or move whichever axis they want
      * to assign to each action.
      */
-	public float x, y, z, pitch, yaw, roll;
+	public float rightLeft, foreAft, upDown, pitch, yaw, roll;
 	public boolean stop, reverse, slowSim, speedSim, bodiesSmaller, bodiesBigger,
 		sensitivityDown, sensitivityUp, trails;
+		
+	public boolean rotationalInertia = true;
 	
 	// Indices for components corresponding to each axis/control (GI = GamepadIndex)
 	private int xGI, yGI, zGI, pitchGI, yawGI, rollGI, yawToRollGI, 
 		stopGI, reverseGI, slowSimGI, speedSimGI, bodiesSmallerGI, bodiesBiggerGI, 
 		sensitivityDownGI, sensitivityUpGI, trailsGI;
 	// Now same for the keyboard (KI = KeyboardIndex)
-	private int xUpKI, xDownKI, yUpKI, yDownKI, zUpKI, zDownKI, 
+	private int rightKI, leftKI, foreKI, aftKI, upKI, downKI, 
 		pitchUpKI, pitchDownKI, yawLeftKI, yawRightKI, rollLeftKI, rollRightKI,
-		stopKI, reverseKI, slowSimKI, speedSimKI, bodiesSmallerKI, bodiesBiggerKI, 
-		sensitivityDownKI, sensitivityUpKI, trailsKI;
+		slowSimKI, speedSimKI, bodiesSmallerKI, bodiesBiggerKI, 
+		sensitivityDownKI, sensitivityUpKI, stopKI, stopRotationKI;
+	// These ones are toggles and will need debouncing
+	private int  reverseKI, trailsKI, rotationalInertiaKI;
+	private boolean reverseButton, trailsButton, rotationalInertiaButton;
+	
+	
               
-	public ControllerReader(OrreryEngine orEn){
-		oe = orEn;
+	public ControllerReader(){
 	}
 	
     void initControllers(){
@@ -116,12 +123,36 @@ public class ControllerReader {
 			// to specific actions
 			if(index == keyboardIndex){
 				for (int i = 0; i < comps.length; i++) {
+					// Rotation controls
 					if(comps[i].getName()=="O") pitchUpKI = i;
 					if(comps[i].getName()=="L") pitchDownKI = i;
 					if(comps[i].getName()=="K") yawLeftKI = i;
 					if(comps[i].getName()==";") yawRightKI = i;
 					if(comps[i].getName()=="I") rollLeftKI = i;
 					if(comps[i].getName()=="P") rollRightKI = i;
+					if(comps[i].getName()=="'") stopRotationKI = i;
+					
+					// Translation controls
+					if(comps[i].getName()=="D") rightKI = i;
+					if(comps[i].getName()=="A") leftKI = i;
+					if(comps[i].getName()=="W") foreKI = i;
+					if(comps[i].getName()=="S") aftKI = i;
+					if(comps[i].getName()=="R") upKI = i;
+					if(comps[i].getName()=="F") downKI = i;
+					if(comps[i].getName()==" ") stopKI = i; // space bar
+					
+					// Sim controls
+					if(comps[i].getName()=="1")  slowSimKI = i;
+					if(comps[i].getName()=="2")  speedSimKI = i;
+					if(comps[i].getName()=="3")  bodiesSmallerKI = i;
+					if(comps[i].getName()=="4")  bodiesBiggerKI = i;
+					if(comps[i].getName()=="5")  sensitivityDownKI = i;
+					if(comps[i].getName()=="6")  sensitivityUpKI = i;
+					if(comps[i].getName()=="T")  trailsKI = i;
+					
+					if(comps[i].getName()=="C")  rotationalInertiaKI = i;
+					
+					
 				}
 			}
 			if(index == gamepadIndex){
@@ -134,6 +165,35 @@ public class ControllerReader {
 	}
 	
     void pollUserInput(){
+    	// Set all variables to zero; if no input from user then no reaction.
+    	
+    	// Could be interesting to experiment with NOT doing this for rotation; 
+    	// it would result in cumulative rotations, effectively rotational 
+    	// inertia, which could be fun, especially when using a keyboard.  
+    	// Maybe make that an option (would have to include a much lower impact
+    	// for each keystroke.  
+    	if(!rotationalInertia){
+    		pitch = 0;
+    		yaw = 0;
+    		roll = 0;
+    	}
+    	
+		
+		rightLeft = 0;
+		foreAft = 0;
+		upDown = 0;
+		
+		slowSim = false;
+		speedSim = false;
+		bodiesSmaller = false;
+		bodiesBigger = false;
+		sensitivityDown = false;
+		sensitivityUp = false;
+		
+		// Toggles which need debouncing
+		stop = false;
+		
+		
     	if(gamepadIndex != 99){
     		Controller gamepad = ControllerEnvironment.getDefaultEnvironment().
     				getControllers()[gamepadIndex];		
@@ -146,11 +206,6 @@ public class ControllerReader {
     		float rX = gamepadComps[analogCompIndex[3]].getPollData();
     		float rY = gamepadComps[analogCompIndex[4]].getPollData();
     		float rZ = gamepadComps[analogCompIndex[5]].getPollData();
-    		
-    		
-    		pitch = 0;
-    		yaw = 0;
-    		roll = 0;
 
 			// Cubing the deflection for exponential reaction (small
 			// deflection causes very small result, large deflection
@@ -167,6 +222,7 @@ public class ControllerReader {
     			}else roll = rX*rX*rX;
         	}
     		
+    		/*
     		if(Math.abs(lY) >= deadStickZone){
         		if(gamepadComps[10].getPollData()==0.0f){
             		// Translate y (fore and aft)
@@ -223,15 +279,15 @@ public class ControllerReader {
             }
             if(gamepadComps[16].getPollData()==1.0f){
             	// Reverse sim (switch between backward and forward steps in time)
-            	if(!oe.reverseButton){
-            		oe.reverse=!oe.reverse;
-            		oe.reverseButton=true;
+            	if(!reverseButton){
+            		reverse=!reverse;
+            		reverseButton=true;
             	}
             }
             	
             if(gamepadComps[16].getPollData()==0.0f){
             	// De-bounce reverse button, set flag to false when button not pressed
-            	oe.reverseButton=false;
+            	reverseButton=false;
             }
             if(gamepadComps[16].getPollData()==0.25f){
             	// Increase sensitivity of translation (faster cam movements)
@@ -244,125 +300,58 @@ public class ControllerReader {
             	oe.camAccel /= 1.05;
             	oe.camLineY= Math.log((oe.camAccel/oe.camAccelMonitor)+1)-0.9;
             }
-            if(gamepadComps[16].getPollData()==0.5f){
-            	
-            }
-            if(gamepadComps[16].getPollData()==1.0f){
-            	
-            }
-            
-            
+            */
+         
     	}
     	if(keyboardIndex != 99){
 			Controller kbd = ControllerEnvironment.getDefaultEnvironment().getControllers()[keyboardIndex];		
 			Component[] keyboardComps = kbd.getComponents();
 			kbd.poll();
 			
-			if(keyboardComps[yawLeftKI].getPollData()==1.0f) yaw -= 0.1f;
-			if(keyboardComps[yawRightKI].getPollData()==1.0f) yaw += 0.1f;
-			if(keyboardComps[pitchUpKI].getPollData()==1.0f) pitch -= 0.1f;
-			if(keyboardComps[pitchDownKI].getPollData()==1.0f) pitch += 0.1f;
-			if(keyboardComps[rollLeftKI].getPollData()==1.0f) roll -= 0.1f;
-			if(keyboardComps[rollRightKI].getPollData()==1.0f) roll += 0.1f;
+			// Rotations
+			if(keyboardComps[yawLeftKI].getPollData()==1.0f) yaw -= keySpinMult;
+			if(keyboardComps[yawRightKI].getPollData()==1.0f) yaw += keySpinMult;
+			if(keyboardComps[pitchUpKI].getPollData()==1.0f) pitch += keySpinMult;
+			if(keyboardComps[pitchDownKI].getPollData()==1.0f) pitch -= keySpinMult;
+			if(keyboardComps[rollLeftKI].getPollData()==1.0f) roll -= keySpinMult;
+			if(keyboardComps[rollRightKI].getPollData()==1.0f) roll += keySpinMult;
+			if(keyboardComps[stopRotationKI].getPollData()==1.0f) {
+				roll = 0;
+				pitch = 0;
+				yaw = 0;
+			}
 			
-	    	//Simulation speed control
-	        if(keyboardComps[1].getPollData()==1.0f){ 
-	        	// 1 (slow down)
-	        	oe.timeStep*=0.95;
-	        	oe.simSpeedLineY = Math.log((oe.timeStep/oe.timeStepMonitor)+1)-0.9;
-	        	}
-	        if(keyboardComps[2].getPollData()==1.0f){ 
-	        	// 2 (speed up)
-	        	oe.timeStep/=0.95;
-	        	oe.simSpeedLineY = Math.log((oe.timeStep/oe.timeStepMonitor)+1)-0.9;
-	        	}
-	        
-	        // Reverse sim (switch between backward and forward steps in time)
-	        if(oe.reverse&&oe.timeStep>0){oe.timeStep*=-1;}
-	        if(!oe.reverse&&oe.timeStep<0){oe.timeStep*=-1;}
-	        
-	        // This should NOT be here
-	        oe.createMatrix(oe.camOrient, oe.camMatrixBuffer);
-	    
-	    	//Translation
-	    	
-	        if(keyboardComps[56].getPollData()==1.0f){
-	        	// Dead stop in local reference frame
-	        	oe.cam.xVel = 0.0;
-	        	oe.cam.yVel = 0.0;
-	        	oe.cam.zVel = 0.0;
-	        }
-	        
-	        if(keyboardComps[42].getPollData()==1.0f){
-	        	// Increase sensitivity of translation (faster cam movements)
-	        	oe.camAccel *= 1.05;
-	        	oe.camLineY= Math.log((oe.camAccel/oe.camAccelMonitor)+1)-0.9;
-	        	
-	        }
-	        if(keyboardComps[41].getPollData()==1.0f){
-	        	// Decrease sensitivity of translation (slower cam movements)
-	        	oe.camAccel /= 1.05;
-	        	oe.camLineY= Math.log((oe.camAccel/oe.camAccelMonitor)+1)-0.9;
-	        }
-	
-	        if(keyboardComps[4].getPollData()==1.0f){
-	        	// Increase display size of all bodies in sim
-	        	oe.bodyViewScaleFactor *= 1.01;
-	            for(int bc=0;bc<oe.sprites;bc++){
-	            	oe.body[bc].displayRad=Math.log(oe.body[bc].rad/
-	            			oe.bodyViewScaleLog)*oe.bodyViewScaleFactor;
-	            }
-	        }
-	        if(keyboardComps[3].getPollData()==1.0f){
-	        	// Decrease display size of all bodies in sim
-	        	oe.bodyViewScaleFactor /=1.01;
-	            for(int bc=0;bc<oe.sprites;bc++){
-	            	oe.body[bc].displayRad=Math.log(oe.body[bc].rad/
-	            			oe.bodyViewScaleLog)*oe.bodyViewScaleFactor;
-	            }
-	        }
-	        
-	        if(keyboardComps[11].getPollData()==1.0f){
-	        	//a left
-	        	oe.cam.xVel += (10*oe.camAccel*oe.camMatrixBuffer.get(0))/oe.timeStep;
-	        	oe.cam.yVel += (10*oe.camAccel*oe.camMatrixBuffer.get(4))/oe.timeStep;
-	        	oe.cam.zVel += (10*oe.camAccel*oe.camMatrixBuffer.get(8))/oe.timeStep;
-	        }
-	        
-	        if(keyboardComps[14].getPollData()==1.0f){				
-	        	//d right
-	        	oe.cam.xVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(0))/oe.timeStep;
-	        	oe.cam.yVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(4))/oe.timeStep;
-	        	oe.cam.zVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(8))/oe.timeStep;
-	        }
-	        
-	        if(keyboardComps[16].getPollData()==1.0f){				
-	        	//f down
-	        	oe.cam.xVel += (10*oe.camAccel*oe.camMatrixBuffer.get(1))/oe.timeStep;
-	        	oe.cam.yVel += (10*oe.camAccel*oe.camMatrixBuffer.get(5))/oe.timeStep;
-	        	oe.cam.zVel += (10*oe.camAccel*oe.camMatrixBuffer.get(9))/oe.timeStep; 
-	        }
-	        
-	        if(keyboardComps[28].getPollData()==1.0f){				
-	        	//r up
-	        	oe.cam.xVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(1))/oe.timeStep;
-	        	oe.cam.yVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(5))/oe.timeStep;
-	        	oe.cam.zVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(9))/oe.timeStep; 
-	        }
-	        
-	        if(keyboardComps[33].getPollData()==1.0f){				
-	        	//w fore
-	        	oe.cam.xVel += (10*oe.camAccel*oe.camMatrixBuffer.get(2))/oe.timeStep;
-	        	oe.cam.yVel += (10*oe.camAccel*oe.camMatrixBuffer.get(6))/oe.timeStep;
-	        	oe.cam.zVel += (10*oe.camAccel*oe.camMatrixBuffer.get(10))/oe.timeStep;
-	        }
-	        
-	        if(keyboardComps[29].getPollData()==1.0f){				
-	        	//s aft
-	        	oe.cam.xVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(2))/oe.timeStep;
-	        	oe.cam.yVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(6))/oe.timeStep;
-	        	oe.cam.zVel -= (10*oe.camAccel*oe.camMatrixBuffer.get(10))/oe.timeStep;
-	        }
+			// Translations\
+			if(keyboardComps[aftKI].getPollData()==1.0f) foreAft -= 10;
+			if(keyboardComps[foreKI].getPollData()==1.0f) foreAft += 10;
+			if(keyboardComps[rightKI].getPollData()==1.0f) rightLeft -= 10;
+			if(keyboardComps[leftKI].getPollData()==1.0f) rightLeft += 10;
+			if(keyboardComps[upKI].getPollData()==1.0f) upDown -= 10;
+			if(keyboardComps[downKI].getPollData()==1.0f) upDown += 10;
+			if(keyboardComps[stopKI].getPollData()==1.0f) stop = true;
+			
+			// Sim controls
+			if(keyboardComps[slowSimKI].getPollData()==1.0f) slowSim = true;
+			if(keyboardComps[speedSimKI].getPollData()==1.0f) speedSim = true;
+			if(keyboardComps[bodiesSmallerKI].getPollData()==1.0f) bodiesSmaller = true;
+			if(keyboardComps[bodiesBiggerKI].getPollData()==1.0f) bodiesBigger = true;
+			if(keyboardComps[sensitivityDownKI].getPollData()==1.0f) sensitivityDown = true;
+			if(keyboardComps[sensitivityUpKI].getPollData()==1.0f) sensitivityUp = true;
+			
+			// Toggled sim controls
+			if(keyboardComps[reverseKI].getPollData()==1.0f){
+            	if(!reverseButton){
+            		reverse=!reverse;
+            		reverseButton=true;
+            	}
+            }else reverseButton = false;
+			
+			if(keyboardComps[trailsKI].getPollData()==1.0f){
+            	if(!trailsButton){
+            		trails=!trails;
+            		trailsButton=true;
+            	}
+            }else trailsButton = false;
     	}
     }
 
