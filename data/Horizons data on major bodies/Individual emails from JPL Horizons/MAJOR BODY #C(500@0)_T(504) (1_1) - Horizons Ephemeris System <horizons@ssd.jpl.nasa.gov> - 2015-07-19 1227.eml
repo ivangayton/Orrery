@@ -1,0 +1,100 @@
+Delivered-To: ivangayton@gmail.com
+Received: by 10.25.22.69 with SMTP id m66csp570252lfi;
+        Sun, 19 Jul 2015 04:33:06 -0700 (PDT)
+X-Received: by 10.68.94.131 with SMTP id dc3mr47615191pbb.127.1437305259181;
+        Sun, 19 Jul 2015 04:27:39 -0700 (PDT)
+Return-Path: <horizons@ssd.jpl.nasa.gov>
+Received: from ssd.jpl.nasa.gov (ssd.jpl.nasa.gov. [128.149.23.134])
+        by mx.google.com with ESMTPS id bg3si28377177pbc.0.2015.07.19.04.27.38
+        for <ivangayton@gmail.com>
+        (version=TLSv1 cipher=RC4-SHA bits=128/128);
+        Sun, 19 Jul 2015 04:27:39 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) client-ip=128.149.23.134;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) smtp.mail=horizons@ssd.jpl.nasa.gov
+Received: from ssd.jpl.nasa.gov (localhost.localdomain [127.0.0.1])
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8) with ESMTP id t6JBRbQu021483
+	for <ivangayton@gmail.com>; Sun, 19 Jul 2015 04:27:37 -0700
+Received: (from horizons@localhost)
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8/Submit) id t6JBRb9P021482
+	for ivangayton@gmail.com; Sun, 19 Jul 2015 04:27:37 -0700
+Date: Sun, 19 Jul 2015 04:27:37 -0700
+From: Horizons Ephemeris System <horizons@ssd.jpl.nasa.gov>
+Message-Id: <201507191127.t6JBRb9P021482@ssd.jpl.nasa.gov>
+Subject: MAJOR BODY #C(500@0)_T(504) (1/1)
+
+ Automated mail xmit by MAIL_REQUEST, PID=   20220 Sun Jul 19 04:27:37 2015
+++++++++++++++++++++++++++++++++ (part 1 of 1)  +++++++++++++++++++++++++++++++
+
+*******************************************************************************
+ Revised: Dec 02, 2013           Callisto / (Jupiter)                       504
+
+ SATELLITE PHYSICAL PROPERTIES:
+  Radius (km)             = 2403   +- 5     Density (g cm^-3)   = 1.851 +- .004
+  Mass (10^20 kg )        = 1076   +- 1     Geometric Albedo    =  0.20 
+
+ SATELLITE ORBITAL DATA:
+  Semi-major axis, a (km) = 1883  (10^3)    Orbital period      = 16.689018 d
+  Eccentricity, e         = 0.007           Rotational period   = Synchronous
+  Inclination, i  (deg)   = 0.281
+*******************************************************************************
+ 
+ 
+*******************************************************************************
+Ephemeris / MAIL_REQUEST Sun Jul 19 04:27:37 2015 Pasadena, USA  / Horizons    
+*******************************************************************************
+Target body name: Callisto (504)                  {source: JUP310}
+Center body name: Solar System Barycenter (0)     {source: DE-0431LE-0431}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Stop  time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Step-size       : DISCRETE TIME-LIST
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : (undefined)                                                  
+Output units    : KM-S                                                         
+Output format   : 02
+Reference frame : ICRF/J2000.0                                                 
+Output type     : GEOMETRIC cartesian states
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+JDCT ,   , X, Y, Z, VX, VY, VZ,
+*******************************************************************************
+$$SOE
+2457222.500000000, A.D. 2015-Jul-19 00:00:00.0000, -6.986728856694440E+08,  4.017460426271681E+08,  1.393046332625705E+07, -1.084261167703615E+01, -1.770985395036973E+01, -8.539191479480568E-02,
+$$EOE
+*******************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    xy-plane: plane of the Earth's orbit at the reference epoch
+    x-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+Symbol meaning  
+
+    JDCT     Epoch Julian Date, Coordinate Time
+      X      x-component of position vector (km)                               
+      Y      y-component of position vector (km)                               
+      Z      z-component of position vector (km)                               
+      VX     x-component of velocity vector (km/sec)                           
+      VY     y-component of velocity vector (km/sec)                           
+      VZ     z-component of velocity vector (km/sec)                           
+
+Geometric states/elements have no aberration corrections applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.Giorgini@jpl.nasa.gov
+*******************************************************************************

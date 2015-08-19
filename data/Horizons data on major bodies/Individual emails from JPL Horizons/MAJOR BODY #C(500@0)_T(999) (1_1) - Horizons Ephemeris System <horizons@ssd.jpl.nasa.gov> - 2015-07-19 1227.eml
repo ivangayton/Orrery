@@ -1,0 +1,114 @@
+Delivered-To: ivangayton@gmail.com
+Received: by 10.25.22.69 with SMTP id m66csp568875lfi;
+        Sun, 19 Jul 2015 04:28:00 -0700 (PDT)
+X-Received: by 10.67.8.40 with SMTP id dh8mr46554356pad.129.1437305256983;
+        Sun, 19 Jul 2015 04:27:36 -0700 (PDT)
+Return-Path: <horizons@ssd.jpl.nasa.gov>
+Received: from ssd.jpl.nasa.gov (ssd.jpl.nasa.gov. [128.149.23.134])
+        by mx.google.com with ESMTPS id xv3si28380783pab.185.2015.07.19.04.27.36
+        for <ivangayton@gmail.com>
+        (version=TLSv1 cipher=RC4-SHA bits=128/128);
+        Sun, 19 Jul 2015 04:27:36 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) client-ip=128.149.23.134;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) smtp.mail=horizons@ssd.jpl.nasa.gov
+Received: from ssd.jpl.nasa.gov (localhost.localdomain [127.0.0.1])
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8) with ESMTP id t6JBRZkC021000
+	for <ivangayton@gmail.com>; Sun, 19 Jul 2015 04:27:35 -0700
+Received: (from horizons@localhost)
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8/Submit) id t6JBRZb3020998
+	for ivangayton@gmail.com; Sun, 19 Jul 2015 04:27:35 -0700
+Date: Sun, 19 Jul 2015 04:27:35 -0700
+From: Horizons Ephemeris System <horizons@ssd.jpl.nasa.gov>
+Message-Id: <201507191127.t6JBRZb3020998@ssd.jpl.nasa.gov>
+Subject: MAJOR BODY #C(500@0)_T(999) (1/1)
+
+ Automated mail xmit by MAIL_REQUEST, PID=   20220 Sun Jul 19 04:27:35 2015
+++++++++++++++++++++++++++++++++ (part 1 of 1)  +++++++++++++++++++++++++++++++
+
+*******************************************************************************
+ Revised: Mar 5, 2015              134340 Pluto                             999
+ 
+ Fit to all available observations (PLU043/DE432)
+
+ ICRF/J2000.0 helio. ecliptic osc. elements (AU, DAYS, DEG, period=Julian yrs):
+
+ EPOCH= 2457217.5 ! 2015-Jul-14 00:00 (CT)
+  EC= 2.543036816945946E-01 QR= 2.963702410574355E+01 IN= 1.736609399010031E+01
+  OM= 1.102100007229519E+02 W = 1.142248220688449E+02 Tp=  2447885.605487769935
+  A = 3.974409337717218E+01 AD= 4.985116264860082E+01 PR= 9.151816786927560E+04
+
+ NOTE:
+  The Horizons output log may report using DE431 as the source of target or
+  center data, but it is nevertheless using DE432 as an override if Pluto is 
+  involved. This is to maintain ephemeris consistency for the New Horizons 
+  spacecraft encounter at Pluto.
+
+ PHYSICAL DATA (updated 2013-Nov-19, Mc= Charon mass, radius is IAU 2009):
+  Mass Pluto (10^22 kg) = 1.307+-0.018    Density Pluto:
+  GM (planet) km^3/s^2  = 872.4             (R = 1195 km)       = 1.83 g/cm^3
+  Mass ratio (Mc/Mp)    = 0.117           Radius of Pluto, Rp   = 1195 km
+  Surface gravity       = 61.1 cm/s^2     Geometric albedo      = 0.3 
+  Sidereal orbit period = 249.58932 yr    Mean orbit velocity   = 4.656 km/s
+  Escape velocity (km/s)= 1.21
+*******************************************************************************
+ 
+ 
+*******************************************************************************
+Ephemeris / MAIL_REQUEST Sun Jul 19 04:27:35 2015 Pasadena, USA  / Horizons    
+*******************************************************************************
+Target body name: Pluto (999)                     {source: PLU043}
+Center body name: Solar System Barycenter (0)     {source: DE-0431LE-0431}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Stop  time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Step-size       : DISCRETE TIME-LIST
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : (undefined)                                                  
+Output units    : KM-S                                                         
+Output format   : 02
+Reference frame : ICRF/J2000.0                                                 
+Output type     : GEOMETRIC cartesian states
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+JDCT ,   , X, Y, Z, VX, VY, VZ,
+*******************************************************************************
+$$SOE
+2457222.500000000, A.D. 2015-Jul-19 00:00:00.0000,  1.199816728057577E+09, -4.772295405390764E+09,  1.636091068235264E+08,  5.397696543189651E+00,  2.282203433857222E-01, -1.582669944495905E+00,
+$$EOE
+*******************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    xy-plane: plane of the Earth's orbit at the reference epoch
+    x-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+Symbol meaning  
+
+    JDCT     Epoch Julian Date, Coordinate Time
+      X      x-component of position vector (km)                               
+      Y      y-component of position vector (km)                               
+      Z      z-component of position vector (km)                               
+      VX     x-component of velocity vector (km/sec)                           
+      VY     y-component of velocity vector (km/sec)                           
+      VZ     z-component of velocity vector (km/sec)                           
+
+Geometric states/elements have no aberration corrections applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.Giorgini@jpl.nasa.gov
+*******************************************************************************

@@ -1,0 +1,103 @@
+Delivered-To: ivangayton@gmail.com
+Received: by 10.25.22.69 with SMTP id m66csp570444lfi;
+        Sun, 19 Jul 2015 04:33:45 -0700 (PDT)
+X-Received: by 10.70.43.72 with SMTP id u8mr47451922pdl.33.1437305275001;
+        Sun, 19 Jul 2015 04:27:55 -0700 (PDT)
+Return-Path: <horizons@ssd.jpl.nasa.gov>
+Received: from ssd.jpl.nasa.gov (ssd.jpl.nasa.gov. [128.149.23.134])
+        by mx.google.com with ESMTPS id nu16si28389715pdb.199.2015.07.19.04.27.54
+        for <ivangayton@gmail.com>
+        (version=TLSv1 cipher=RC4-SHA bits=128/128);
+        Sun, 19 Jul 2015 04:27:54 -0700 (PDT)
+Received-SPF: pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) client-ip=128.149.23.134;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: best guess record for domain of horizons@ssd.jpl.nasa.gov designates 128.149.23.134 as permitted sender) smtp.mail=horizons@ssd.jpl.nasa.gov
+Received: from ssd.jpl.nasa.gov (localhost.localdomain [127.0.0.1])
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8) with ESMTP id t6JBRrpq025272
+	for <ivangayton@gmail.com>; Sun, 19 Jul 2015 04:27:53 -0700
+Received: (from horizons@localhost)
+	by ssd.jpl.nasa.gov (8.13.8/8.13.8/Submit) id t6JBRro6025271
+	for ivangayton@gmail.com; Sun, 19 Jul 2015 04:27:53 -0700
+Date: Sun, 19 Jul 2015 04:27:53 -0700
+From: Horizons Ephemeris System <horizons@ssd.jpl.nasa.gov>
+Message-Id: <201507191127.t6JBRro6025271@ssd.jpl.nasa.gov>
+Subject: MAJOR BODY #C(500@0)_T(602) (1/1)
+
+ Automated mail xmit by MAIL_REQUEST, PID=   20220 Sun Jul 19 04:27:53 2015
+++++++++++++++++++++++++++++++++ (part 1 of 1)  +++++++++++++++++++++++++++++++
+
+*******************************************************************************
+ Revised: Mar 02, 2015            Enceladus / (Saturn)                      602
+                           http://ssd.jpl.nasa.gov/?sat_phys_par
+                             http://ssd.jpl.nasa.gov/?sat_elem
+
+ SATELLITE PHYSICAL PROPERTIES:
+  Mean Radius (km)        = 252.3   +- 0.6   Density (g/cm^3) =  1.606 +- 0.012
+  Mass (10^22 g)          =  10.805          Geometric Albedo =  1.04
+  GM (km^3/s^2)           =   7.206 +- 0.011 V(1,0)           =  +2.2
+
+ SATELLITE ORBITAL DATA (mean elements referred to local Laplace plane):
+  Semi-major axis, a (km) = 238.04(10^3)    Orbital period    = 1.370218 d
+  Eccentricity, e         = 0.0047          Rotational period = Synchronous
+  Inclination, i  (deg)   = 0.009
+*******************************************************************************
+ 
+ 
+*******************************************************************************
+Ephemeris / MAIL_REQUEST Sun Jul 19 04:27:53 2015 Pasadena, USA  / Horizons    
+*******************************************************************************
+Target body name: Enceladus (602)                 {source: SAT375}
+Center body name: Solar System Barycenter (0)     {source: DE-0431LE-0431}
+Center-site name: BODY CENTER
+*******************************************************************************
+Start time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Stop  time      : A.D. 2015-Jul-19 00:00:00.0000 CT 
+Step-size       : DISCRETE TIME-LIST
+*******************************************************************************
+Center geodetic : 0.00000000,0.00000000,0.0000000 {E-lon(deg),Lat(deg),Alt(km)}
+Center cylindric: 0.00000000,0.00000000,0.0000000 {E-lon(deg),Dxy(km),Dz(km)}
+Center radii    : (undefined)                                                  
+Output units    : KM-S                                                         
+Output format   : 02
+Reference frame : ICRF/J2000.0                                                 
+Output type     : GEOMETRIC cartesian states
+Coordinate systm: Ecliptic and Mean Equinox of Reference Epoch                 
+*******************************************************************************
+JDCT ,   , X, Y, Z, VX, VY, VZ,
+*******************************************************************************
+$$SOE
+2457222.500000000, A.D. 2015-Jul-19 00:00:00.0000, -6.739117755047197E+08, -1.332142217916171E+09,  4.991201187198013E+07, -1.075179807839499E+00, -1.171269967531177E+01,  4.478270709208322E+00,
+$$EOE
+*******************************************************************************
+Coordinate system description:
+
+  Ecliptic and Mean Equinox of Reference Epoch
+
+    Reference epoch: J2000.0
+    xy-plane: plane of the Earth's orbit at the reference epoch
+    x-axis  : out along ascending node of instantaneous plane of the Earth's
+              orbit and the Earth's mean equator at the reference epoch
+    z-axis  : perpendicular to the xy-plane in the directional (+ or -) sense
+              of Earth's north pole at the reference epoch.
+
+Symbol meaning  
+
+    JDCT     Epoch Julian Date, Coordinate Time
+      X      x-component of position vector (km)                               
+      Y      y-component of position vector (km)                               
+      Z      z-component of position vector (km)                               
+      VX     x-component of velocity vector (km/sec)                           
+      VY     y-component of velocity vector (km/sec)                           
+      VZ     z-component of velocity vector (km/sec)                           
+
+Geometric states/elements have no aberration corrections applied.
+
+ Computations by ...
+     Solar System Dynamics Group, Horizons On-Line Ephemeris System
+     4800 Oak Grove Drive, Jet Propulsion Laboratory
+     Pasadena, CA  91109   USA
+     Information: http://ssd.jpl.nasa.gov/
+     Connect    : telnet://ssd.jpl.nasa.gov:6775  (via browser)
+                  telnet ssd.jpl.nasa.gov 6775    (via command-line)
+     Author     : Jon.Giorgini@jpl.nasa.gov
+*******************************************************************************
