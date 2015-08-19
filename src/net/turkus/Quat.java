@@ -60,7 +60,7 @@ public class Quat {
     	 * (x^2 + y^2 + z^2 + w^2 = 1).
     	 */
     	dBuf.rewind();
-    	dBuf.put(1.0 - 2.0 * (y *y + z * q.z));
+    	dBuf.put(1.0 - 2.0 * (y *y + z * z));
     	dBuf.put(2.0 * (x * y + z * w));
     	dBuf.put(2.0 * (x * z - y * w));
     	dBuf.put(0.0);

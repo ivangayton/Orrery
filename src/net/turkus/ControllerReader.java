@@ -5,8 +5,6 @@ import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
 public class ControllerReader {
-	// private OrreryEngine oe;
-	
     // Indices to find various devices and components
     private static int gamepadIndex;
     private static int keyboardIndex;

@@ -1,5 +1,6 @@
 package net.turkus;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -273,7 +274,7 @@ public class OrreryEngine implements GLEventListener{
     private void calcGravForce(double pX1, double pY1, double pZ1, double pX2,
            double pY2, double pZ2, double m1, double m2){
        double distSq=(pX2-pX1)*(pX2-pX1)+(pY2-pY1)*(pY2-pY1)+(pZ2-pZ1)*(pZ2-pZ1);
-       double gPull=(1/(distSq))*(m1)*m2*gravitationalConstant;
+       double gPull=(1/(distSq))*m1*m2*gravitationalConstant;
        double distance=Math.sqrt(distSq);
        xF=gPull/distance*(pX2-pX1);
        yF=gPull/distance*(pY2-pY1);
@@ -460,6 +461,9 @@ public class OrreryEngine implements GLEventListener{
    }*/
     
     public void createBodies(){
+    	File dataFromJPL = new File ("data/JPL.txt");
+    	System.out.println(dataFromJPL.getAbsolutePath());
+    	EphemerisReader ephR = new EphemerisReader(dataFromJPL);
         //frame, mass, xyz position, xyz velocity, radius, rotation, color, name
         body[0]=new Body(bodyViewScaleLog, bodyViewScaleFactor, 1.9891E+30,0,0,0,0,0,0,
                 6.960E+8, 0.01, Color.yellow,"Sol");
